@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title></title>
+</head>
+<body>
+	<style>
+		html, body {
+			width: 100vw;
+			height: 100vh;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+
+	<script src="https://cdn.jsdelivr.net/npm/p5@1.5.0/lib/p5.js"></script>
+	<script>
+		let hmap = []
+		let upper_threshold = {
+			slider: null,
+			value: 60
+		}
+		let lower_threshold = {
+			slider: null,
+			value: 40
+		}
+
+		let frequency = {
+			slider: null,
+			value: 5
+		}
+
+		let regenerateButton = null;
+		
+		function setup() {
+			createCanvas(screen.availWidth, screen.availHeight - 40);
+
+			genMap(width, height, frequency.value/1000, upper_threshold.value/100, lower_threshold.value/100);
+
+			upper_threshold.slider = createSlider(0, 100, 100);
+			lower_threshold.slider = createSlider(0, 100, 100);
+			frequency.slider = createSlider(0, 100, 100);
+			
+			regenerateButton = createButton('Regenerate');
+			regenerateButton.mousePressed(() => {
+				genMap(width, height, frequency.value/1000, upper_threshold.value/100, lower_threshold.value/100);
+				drawMap();
+			});
+			
+			drawMap();
+		}
+
+		function draw() {
+			if (upper_threshold.value != upper_threshold.slider.value()) {
+				upper_threshold.value = upper_threshold.slider.value();
+				genMap(width, height, frequency.value/1000, upper_threshold.value/100, lower_threshold.value/100);
+				drawMap();
+			}
+
+			if (lower_threshold.value != lower_threshold.slider.value()) {
+				lower_threshold.value = lower_threshold.slider.value();
+				genMap(width, height, frequency.value/1000, upper_threshold.value/100, lower_threshold.value/100);
+				drawMap();
+			}
+
+			if (frequency.value != frequency.slider.value()) {
+				frequency.value = frequency.slider.value();
+				genMap(width, height, frequency.value/1000, upper_threshold.value/100, lower_threshold.value/100);
+				drawMap();
+			}
+		}
+
+		function genMap(w, h, frequency, upper_threshold, lower_threshold) {
+			hmap = [];
+
+			for (let x = 0; x < w; x+=10) {
+				for (let y = 0; y < h; y+=10) {
+					let n = 0.2 * noise(x * frequency, y * frequency);
+					if (n < lower_threshold) {
+						n = 0;
+					} else if (n > upper_threshold) {
+						n = 150;
+					} else {
+						n *= 255;
+					}
+
+					hmap.push({
+						dimensions: [x, y, 10, 10],
+						color: n,
+					});
+				}
+			}
+		}
+
+		function drawMap() {
+			background(220);
+			fill(255);
+			for (const r of hmap) {
+				const d = r.dimensions;
+				const c = r.color;
+
+				fill(c);
+				rect(...d);
+			}
+		}
+	</script>
+</body>
+</html>
