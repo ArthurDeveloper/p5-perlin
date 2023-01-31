@@ -44,6 +44,10 @@
 			lower_threshold.slider = createSlider(0, 100, 100);
 			frequency.slider = createSlider(0, 100, 100);
 			
+			upper_threshold.slider.value(upper_threshold.value);
+			lower_threshold.slider.value(lower_threshold.value);
+			frequency.slider.value(frequency.value);
+
 			regenerateButton = createButton('Regenerate');
 			regenerateButton.mousePressed(() => {
 				genMap(width, height, frequency.value/1000, upper_threshold.value/100, lower_threshold.value/100);
