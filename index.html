@@ -50,6 +50,7 @@
 
 			regenerateButton = createButton('Regenerate');
 			regenerateButton.mousePressed(() => {
+				noiseSeed(Math.ceil(1 + Math.random() * 100));
 				genMap(width, height, frequency.value/1000, upper_threshold.value/100, lower_threshold.value/100);
 				drawMap();
 			});
